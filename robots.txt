@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sassboi.github.io/sitemap.xml
