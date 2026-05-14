@@ -105,13 +105,15 @@
             overflow-x: hidden;
         }
 
-        /* Animated star canvas */
-        #stars-canvas {
+        /* Fixed background image */
+        .bg-image {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
             z-index: 0;
             pointer-events: none;
+            background: linear-gradient(to bottom, rgba(4, 8, 18, 0.6) 0%, rgba(4, 8, 18, 0.85) 100%),
+                        url('assets/imgs/bg-milkyway.jpg') center/cover no-repeat;
         }
 
         /* Navigation */
@@ -793,7 +795,7 @@
 </head>
 <body>
 
-<canvas id="stars-canvas"></canvas>
+<div class="bg-image"></div>
 
 <!-- Navigation -->
 <nav id="navbar">
@@ -1427,56 +1429,6 @@
 </footer>
 
 <script>
-// Animated star field -- CD-EoR inspired: mix of cool blue and warm pink stars
-const canvas = document.getElementById('stars-canvas');
-const ctx = canvas.getContext('2d');
-let stars = [];
-const STAR_COUNT = 220;
-
-function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
-
-function createStars() {
-    stars = [];
-    for (let i = 0; i < STAR_COUNT; i++) {
-        const isWarm = Math.random() < 0.15; // 15% warm hydrogen-pink stars
-        stars.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            size: Math.random() * 1.5 + 0.5,
-            speed: Math.random() * 0.3 + 0.05,
-            opacity: Math.random() * 0.8 + 0.2,
-            twinkle: Math.random() * 0.02 + 0.005,
-            twinkleDir: 1,
-            color: isWarm
-                ? [244, 180, 200] // warm hydrogen pink
-                : [140, 180, 255] // cool 21-cm blue
-        });
-    }
-}
-
-function drawStars() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    stars.forEach(star => {
-        star.opacity += star.twinkle * star.twinkleDir;
-        if (star.opacity >= 1) star.twinkleDir = -1;
-        if (star.opacity <= 0.2) star.twinkleDir = 1;
-        star.y += star.speed;
-        if (star.y > canvas.height) { star.y = 0; star.x = Math.random() * canvas.width; }
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-        const [r, g, b] = star.color;
-        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${star.opacity})`;
-        ctx.fill();
-    });
-    requestAnimationFrame(drawStars);
-}
-
-resize(); createStars(); drawStars();
-window.addEventListener('resize', () => { resize(); createStars(); });
-
 // Navbar scroll
 const navbar = document.getElementById('navbar');
 window.addEventListener('scroll', () => { navbar.classList.toggle('scrolled', window.scrollY > 50); });
